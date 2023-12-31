@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PuntoPrestigio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        #game-container {
+            margin: auto;
+            width: 50%;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        #points,
+        #level,
+        #prestige-button,
+        #level-up-button,
+        #upgrade-button {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        #progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress {
+            height: 20px;
+            width: 0%;
+            background-color: #007bff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game-container" onclick="incrementPoints()">
+        <div id="points">Puntos: 0</div>
+        <div id="level">Nivel: 1</div>
+        <div id="progress-bar">
+            <div id="progress"></div>
+        </div>
+        <button class="button" id="level-up-button" onclick="buyLevel(event)">Lvl Up: 10pts</button>
+        <button class="button" id="prestige-button" onclick="prestige(event)">Prestigio: x1</button>
+        <button class="button" id="upgrade-button" onclick="upgrade(event)">Mejora</button>
+    </div>
+
+    <script>
+        let points = 0;
+        let level = 1;
+        let prestigeMultiplier = 1;
+        let pointsPerClick = 1;
+        let autoclickerActive = false;
+        let progress = 0;
+
+        function incrementPoints() {
+            points += pointsPerClick * prestigeMultiplier;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('points').innerText = 'Puntos: ' + points;
+            document.getElementById('level').innerText = 'Nivel: ' + level;
+            document.getElementById('prestige-button').innerText = 'Prestigio: x' + prestigeMultiplier;
+            updateLevelUpButton();
+            updateUpgradeButton();
+            updateProgressBar();
+            checkAutoclicker();
+        }
+
+        function updateLevelUpButton() {
+            let levelCost = Math.pow(level, 2) * 10;
+            document.getElementById('level-up-button').innerText = 'Lvl Up: ' + levelCost + 'pts';
+        }
+
+        function updateUpgradeButton() {
+            let upgradeCost = Math.pow(pointsPerClick, 2) * 50; // Coste ajustado para las mejoras
+            document.getElementById('upgrade-button').innerText = 'Mejora: ' + upgradeCost + 'pts';
+        }
+
+        function updateProgressBar() {
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function buyLevel(event) {
+            event.stopPropagation();
+            let levelCost = Math.pow(level, 2) * 10;
+            if (points >= levelCost) {
+                points -= levelCost;
+                level++;
+                updateDisplay();
+            } else {
+                alert('No tienes suficientes puntos para comprar el siguiente nivel. Necesitas ' + levelCost + ' puntos.');
+            }
+        }
+
+        function prestige(event) {
+            event.stopPropagation();
+            if (level >= 100) {
+                prestigeMultiplier++;
+                points = 0;
+                level = 1;
+                pointsPerClick = 1;
+                updateDisplay();
+            } else {
+                alert('Necesitas alcanzar al menos el nivel 100 para activar Prestigio.');
+            }
+        }
+
+        function upgrade(event) {
+            event.stopPropagation();
+            let upgradeCost = Math.pow(pointsPerClick, 2) * 50;
+            if (points >= upgradeCost) {
+                points -= upgradeCost;
+                pointsPerClick++;
+                updateDisplay();
+            } else {
+                alert('No tienes suficientes puntos para comprar la mejora. Necesitas ' + upgradeCost + ' puntos.');
+            }
+        }
+
+        function checkAutoclicker() {
+            if (level >= 5 && !autoclickerActive) {
+                autoclickerActive = true;
+                autoclickerInterval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += 10; // Incrementa el progreso
+                    }
+                    if (progress >= 100) {
+                        incrementPoints(); // Agrega puntos si la barra está llena
+                        progress = 0; // Reinicia la barra de progreso
+                    }
+                    updateProgressBar(); // Actualiza la barra de progreso
+                }, calculateAutoclickerSpeed()); // Velocidad basada en el nivel
+            }
+        }
+
+
+        function calculateAutoclickerSpeed() {
+            return Math.max(1000 - (level * 50), 200); // Disminuye la velocidad con cada nivel, con un mínimo de 200 ms
+        }
+
+
+        // Actualizar al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLevelUpButton();
+            updateUpgradeButton();
+        });
+    </script>
+</body>
+
+</html>
