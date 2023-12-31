@@ -9,17 +9,43 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         #game-container {
-            margin: auto;
-            width: 50%;
+            max-width: 500px;
+            /* Máximo ancho del contenedor */
+            width: 90%;
+            /* Ancho relativo al tamaño de la pantalla */
             padding: 20px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
         }
+
+        /* Estilos para pantallas pequeñas (teléfonos móviles) */
+        @media (max-width: 600px) {
+            #game-container {
+                width: 95%;
+                /* Aumentar el ancho en pantallas pequeñas */
+            }
+
+            .button,
+            #points,
+            #level,
+            #prestige-button,
+            #level-up-button,
+            #upgrade-button {
+                font-size: 1em;
+                /* Tamaño de fuente adaptable */
+            }
+        }
+
 
         #points,
         #level,
