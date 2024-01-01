@@ -85,7 +85,7 @@
     </style>
 </head>
 
-<body  onclick="incrementPoints()">
+<body onclick="incrementPoints()">
     <div id="game-container">
         <div id="points">Puntos: 0</div>
         <div id="level">Nivel: 1</div>
@@ -108,6 +108,7 @@
         function incrementPoints() {
             points += pointsPerClick * prestigeMultiplier;
             updateDisplay();
+            saveProgress();
         }
 
         function updateDisplay() {
@@ -148,14 +149,14 @@
 
         function prestige(event) {
             event.stopPropagation();
-            if (level >= 100) {
+            if (level >= 50) {
                 prestigeMultiplier++;
                 points = 0;
                 level = 1;
                 pointsPerClick = 1;
                 updateDisplay();
             } else {
-                alert('Necesitas alcanzar al menos el nivel 100 para activar Prestigio.');
+                alert('Necesitas alcanzar al menos el nivel 50 para activar Prestigio.');
             }
         }
 
@@ -192,11 +193,33 @@
             return Math.max(1000 - (level * 50), 200); // Disminuye la velocidad con cada nivel, con un mínimo de 200 ms
         }
 
+        function saveProgress() {
+            localStorage.setItem('points', points);
+            localStorage.setItem('level', level);
+            localStorage.setItem('prestigeMultiplier', prestigeMultiplier);
+            localStorage.setItem('pointsPerClick', pointsPerClick);
+            localStorage.setItem('autoclickerActive', autoclickerActive);
+            localStorage.setItem('progress', progress);
+            // Guardar cualquier otra variable de juego necesaria
+        }
+
+        function loadProgress() {
+            if (localStorage.getItem('points')) {
+                points = parseInt(localStorage.getItem('points'), 10);
+                level = parseInt(localStorage.getItem('level'), 10);
+                prestigeMultiplier = parseInt(localStorage.getItem('prestigeMultiplier'), 10);
+                pointsPerClick = parseInt(localStorage.getItem('pointsPerClick'), 10);
+                autoclickerActive = localStorage.getItem('autoclickerActive') === 'true';
+                progress = parseInt(localStorage.getItem('progress'), 10);
+                updateDisplay();
+            }
+        }
 
         // Actualizar al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
             updateLevelUpButton();
             updateUpgradeButton();
+            loadProgress();
         });
     </script>
 </body>
