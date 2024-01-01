@@ -122,12 +122,12 @@
         }
 
         function updateLevelUpButton() {
-            let levelCost = Math.pow(level, 2) * 10;
+            let levelCost = Math.pow(level, 2) * 5;
             document.getElementById('level-up-button').innerText = 'Lvl Up: ' + levelCost + 'pts';
         }
 
         function updateUpgradeButton() {
-            let upgradeCost = Math.pow(pointsPerClick, 2) * 50; // Coste ajustado para las mejoras
+            let upgradeCost = Math.pow(pointsPerClick, 2) * 25; // Coste ajustado para las mejoras
             document.getElementById('upgrade-button').innerText = 'Mejora: ' + upgradeCost + 'pts';
         }
 
@@ -137,7 +137,7 @@
 
         function buyLevel(event) {
             event.stopPropagation();
-            let levelCost = Math.pow(level, 2) * 10;
+            let levelCost = Math.pow(level, 2) * 5;
             if (points >= levelCost) {
                 points -= levelCost;
                 level++;
