@@ -17,6 +17,18 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Old versions of Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
         }
 
         #game-container {
@@ -122,7 +134,7 @@
         }
 
         function updateLevelUpButton() {
-            let levelCost = Math.pow(level, 2) * 5;
+            let levelCost = Math.pow(level, 2) * 10;
             document.getElementById('level-up-button').innerText = 'Lvl Up: ' + levelCost + 'pts';
         }
 
@@ -137,7 +149,7 @@
 
         function buyLevel(event) {
             event.stopPropagation();
-            let levelCost = Math.pow(level, 2) * 5;
+            let levelCost = Math.pow(level, 2) * 10;
             if (points >= levelCost) {
                 points -= levelCost;
                 level++;
@@ -162,7 +174,7 @@
 
         function upgrade(event) {
             event.stopPropagation();
-            let upgradeCost = Math.pow(pointsPerClick, 2) * 50;
+            let upgradeCost = Math.pow(pointsPerClick, 2) * 25;
             if (points >= upgradeCost) {
                 points -= upgradeCost;
                 pointsPerClick++;
@@ -214,6 +226,20 @@
                 updateDisplay();
             }
         }
+
+        // Permitir Clics con el Botón Derecho
+        document.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+            incrementPoints();
+        });
+
+        // Soporte para Múltiples Toques en Móviles
+        document.addEventListener('touchstart', function (event) {
+            event.preventDefault();
+            for (let i = 0; i < event.touches.length; i++) {
+                incrementPoints();
+            }
+        });
 
         // Actualizar al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
